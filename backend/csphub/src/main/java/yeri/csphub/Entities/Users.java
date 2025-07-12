@@ -1,6 +1,8 @@
 package yeri.csphub.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.lang.NonNull;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -17,16 +19,27 @@ public class Users {
     private String username;
 
     @Column(columnDefinition = "TEXT")
+    @NotNull
     private String email;
 
     @Column(columnDefinition = "TEXT", name = "password_hash")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(  name = "user_roles",
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @Column(columnDefinition = "TEXT")
+    @NotNull
+    private String provider;
+
+    public Users(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -77,5 +90,13 @@ public class Users {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 }
