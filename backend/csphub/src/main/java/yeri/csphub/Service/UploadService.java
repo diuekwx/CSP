@@ -21,14 +21,16 @@ public class UploadService {
     @Value("${supabase.bucket}")
     private String bucket;
 
+    @Value("${supabase.service_role_key}")
+    private String serviceRoleKey;
 
     private final HttpClient client = HttpClient.newHttpClient();
 
-    public void upload(String jwt, MultipartFile file, String path) throws IOException, InterruptedException {
+    public void upload(MultipartFile file, String path) throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(projectUrl + "/storage/v1/object/" + bucket + "/" + path))
-                .header("Authorization", "Bearer " + jwt)
+                .header("Authorization", "Bearer " + serviceRoleKey)
                 .header("Content-Type", file.getContentType())
                 .PUT(HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
                 .build();
@@ -41,7 +43,20 @@ public class UploadService {
 
     }
 
+    public byte[] download(String path) throws IOException, InterruptedException{
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(projectUrl + "/storage/v1/object/" + bucket + "/" + path))
+                .header("Authorization", "Bearer " + serviceRoleKey)
+                .GET()
+                .build();
 
+        HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+        if (response.statusCode() >= 400){
+            throw new RuntimeException(("Download failed: " + response.body()));
+        }
+        return response.body();
+    }
 
 
 }

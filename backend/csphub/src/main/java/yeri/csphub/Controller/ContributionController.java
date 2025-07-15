@@ -41,7 +41,17 @@ public class ContributionController {
         return ResponseEntity.ok(contributions);
 
     }
+    @GetMapping("/download")
+    public ResponseEntity<ByteArrayResource> fileDownload(@RequestParam("path") String path) throws IOException, InterruptedException {
+        byte[] res = uploadService.download(path);
+        ByteArrayResource resource = new ByteArrayResource(res);
 
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+
+    }
 
     @PostMapping("/contribution")
     public ResponseEntity<Map<String, String>> fileUpload(@RequestParam("file")MultipartFile file){
