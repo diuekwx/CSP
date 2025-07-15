@@ -15,7 +15,7 @@ public class Users {
     @GeneratedValue
     private UUID id;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", unique = true, nullable = false)
     private String username;
 
     @Column(columnDefinition = "TEXT")
