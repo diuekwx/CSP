@@ -1,32 +1,43 @@
 import CalendarHeatmap from 'react-calendar-heatmap';
+import { useEffect, useState } from 'react';
+
+interface Dates{
+    date: string,
+    count: number
+}
 
 export default function HomePage() {
+    const today = new Date();
+    const pad = (num: number) => String(num).padStart(2, '0');
+
+    const [dates, setDates] = useState<Dates[]>([]);
+    const[year, setYears] = useState<number>(today.getFullYear());
     
+    const [startDate, setStartDate] = useState<string>(`${today.getFullYear()}-01-01`);
+    const [endDate, setEndDate] = useState<string>
+        (`${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`);
+
+    useEffect(() => {
     const fetchData =  async () => {
-        const response = await fetch('localhost:5050/api/contribution/dates');
+        const response = await fetch('localhost:5050/api/contribution/user-contributions');
         if (!response.ok){
             throw new Error(`httperror ${response.status}`);
         }
-        const data = response.json();
-
+        const data = await response.json();
+        setDates(data);
     }
-    
-    const values = null;
 
+    fetchData();
+    
+    }, []);
 
     return (
         <>
-        Hello
         <div> 
             <CalendarHeatmap
-            startDate={new Date('2016-01-01')}
-            endDate={new Date('2016-04-01')}
-            values={[
-                { date: '2016-01-01', count: 12 },
-                { date: '2016-01-22', count: 122 },
-                { date: '2016-01-30', count: 38 },
-                
-            ]}
+            startDate={new Date(startDate.toString())}
+            endDate={new Date(endDate.toString())}
+            values={dates}
             />
         </div>
 
