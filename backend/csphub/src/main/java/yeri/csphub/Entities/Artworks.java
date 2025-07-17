@@ -1,6 +1,7 @@
 package yeri.csphub.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -17,6 +18,11 @@ public class Artworks {
 
     @Column(columnDefinition = "TEXT")
     private String title;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private ArtworkRepository project;
 
     @Column(columnDefinition = "TEXT")
     private String description;

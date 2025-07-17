@@ -25,6 +25,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
+
+
     public AuthTokenFilter(UserDetailsServiceImpl userDetailsService, JwtUtils jwtUtils){
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
