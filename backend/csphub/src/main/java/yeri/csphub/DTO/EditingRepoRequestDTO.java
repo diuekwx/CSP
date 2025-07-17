@@ -6,7 +6,7 @@ public class EditingRepoRequestDTO {
 
     public String desc;
 
-    public boolean isPublic;
+    public Boolean isPublic;
 
     public String getName() {
         return name;
@@ -24,7 +24,7 @@ public class EditingRepoRequestDTO {
         this.desc = desc;
     }
 
-    public boolean isPublic() {
+    public Boolean isPublic() {
         return isPublic;
     }
 

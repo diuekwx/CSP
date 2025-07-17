@@ -6,6 +6,7 @@ import yeri.csphub.Entities.ArtworkRepository;
 import yeri.csphub.Entities.Users;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -13,4 +14,6 @@ public interface ArtworkRepositoryRepo extends JpaRepository<ArtworkRepository, 
 
     List<ArtworkRepository> findAllByUser(Users user);
     ArtworkRepository findById(UUID id);
+    Optional<ArtworkRepository> findByUserAndName(String repoName, Users user);
+
 }

@@ -26,7 +26,7 @@ public class RepoController {
 
     //requestbody check -- have to change fs
     @PostMapping("/create")
-    public ResponseEntity<?> createNewRepo(@RequestParam String title, @RequestParam String desc) throws DataIntegrityViolationException {
+    public ResponseEntity<?> createNewRepo(@RequestBody String title, @RequestBody String desc) throws DataIntegrityViolationException {
         try {
             ArtworkRepository created = artworkRepositoryService.createRepo(title, desc);
             URI location = URI.create("/" + created.getName());
@@ -40,8 +40,14 @@ public class RepoController {
     }
 
     @PatchMapping("/edit")
-    public ResponseEntity<?> editRepo(@RequestParam EditingRepoRequestDTO req){
-
+    public ResponseEntity<?> editRepo(@RequestParam String name, @RequestBody EditingRepoRequestDTO req){
+        try{
+            ArtworkRepository updated = artworkRepositoryService.editRepo(name, req);
+            return ResponseEntity.status(200).body(updated);
+        }
+        catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't find");
+        }
 
     }
 
