@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yeri.csphub.DTO.EditingRepoRequestDTO;
 import yeri.csphub.Entities.ArtworkRepository;
+import yeri.csphub.Entities.Artworks;
 import yeri.csphub.Service.ArtworkRepositoryService;
+import yeri.csphub.Service.ArtworkService;
 
 import java.net.URI;
 
@@ -14,10 +16,10 @@ import java.net.URI;
 @RequestMapping("/repository")
 public class RepoController {
 
-    private final ArtworkRepositoryService artworkRepositoryService;
+    private final ArtworkService artworkService;
 
-    public RepoController(ArtworkRepositoryService artworkRepositoryService){
-        this.artworkRepositoryService = artworkRepositoryService;
+    public RepoController(ArtworkService artworkService){
+        this.artworkService = artworkService;
     }
 
     //how do i get user id for every event they do ?
@@ -28,8 +30,8 @@ public class RepoController {
     @PostMapping("/create")
     public ResponseEntity<?> createNewRepo(@RequestBody String title, @RequestBody String desc) throws DataIntegrityViolationException {
         try {
-            ArtworkRepository created = artworkRepositoryService.createRepo(title, desc);
-            URI location = URI.create("/" + created.getName());
+            Artworks created = artworkService.createNewRepo(title, desc);
+            URI location = URI.create("/" + created.getUserId().getUsername() + "/" + created.getTitle());
             return ResponseEntity.created(location).body(created);
         }
         catch (DataIntegrityViolationException e){
@@ -42,11 +44,11 @@ public class RepoController {
     @PatchMapping("/edit")
     public ResponseEntity<?> editRepo(@RequestParam String name, @RequestBody EditingRepoRequestDTO req){
         try{
-            ArtworkRepository updated = artworkRepositoryService.editRepo(name, req);
+            Artworks updated = artworkService.editProject(name, req);
             return ResponseEntity.status(200).body(updated);
         }
         catch (RuntimeException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't find");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't find hehe ");
         }
 
     }

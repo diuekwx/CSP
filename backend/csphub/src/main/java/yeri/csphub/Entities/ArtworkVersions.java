@@ -3,6 +3,7 @@ package yeri.csphub.Entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -22,6 +23,46 @@ public class ArtworkVersions {
     @Column(columnDefinition = "TEXT", name = "version_description")
     private String version_description;
 
-    @Column(name = "uploaded_at")
-    private Timestamp uploadedAt;
+    @Column(name = "uploaded_at", columnDefinition = "timestamp")
+    private Instant uploadedAt;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public Artworks getArtworkId() {
+        return artworkId;
+    }
+
+    public void setArtworkId(Artworks artworkId) {
+        this.artworkId = artworkId;
+    }
+
+    public String getVersion_description() {
+        return version_description;
+    }
+
+    public void setVersion_description(String version_description) {
+        this.version_description = version_description;
+    }
+
+    public Instant getUploadedAt() {
+        return uploadedAt;
+    }
+
+    public void setUploadedAt(Instant uploadedAt) {
+        this.uploadedAt = uploadedAt;
+    }
 }

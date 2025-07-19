@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import yeri.csphub.DTO.FileDto;
+import yeri.csphub.Entities.Artworks;
 import yeri.csphub.Payload.Response.JwtResponse;
 
 import java.io.IOException;
@@ -26,10 +28,13 @@ public class UploadService {
 
     private final HttpClient client = HttpClient.newHttpClient();
 
-    public void upload(MultipartFile file, String path) throws IOException, InterruptedException {
+
+
+    public String upload(MultipartFile file, String path) throws IOException, InterruptedException {
+        String storagePath = projectUrl + "/storage/v1/object/" + bucket + "/" + path;
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(projectUrl + "/storage/v1/object/" + bucket + "/" + path))
+                .uri(URI.create(storagePath))
                 .header("Authorization", "Bearer " + serviceRoleKey)
                 .header("Content-Type", file.getContentType())
                 .PUT(HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
@@ -40,6 +45,8 @@ public class UploadService {
         if (response.statusCode() >= 400){
             throw new RuntimeException("Upload failed: " + response.body());
         }
+
+        return storagePath;
 
     }
 

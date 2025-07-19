@@ -10,7 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import yeri.csphub.DTO.CreateRepoRequestDTO;
+import yeri.csphub.DTO.FileDto;
 import yeri.csphub.Entities.Contributions;
+import yeri.csphub.Service.ArtworkService;
+import yeri.csphub.Service.ArtworkVersionsService;
 import yeri.csphub.Service.ContributionService;
 import yeri.csphub.Service.UploadService;
 
@@ -27,10 +31,13 @@ public class ContributionController {
 
     private final UploadService uploadService;
     private final ContributionService contributionService;
+    private final ArtworkVersionsService artworkVersionsService;
 
-    public ContributionController(UploadService uploadService, ContributionService contributionService){
+    public ContributionController(UploadService uploadService, ContributionService contributionService,
+                                  ArtworkVersionsService artworkVersionsService){
         this.uploadService = uploadService;
         this.contributionService = contributionService;
+        this.artworkVersionsService = artworkVersionsService;
     }
 
     @GetMapping("/user-contributions")
@@ -54,12 +61,19 @@ public class ContributionController {
     }
 
     @PostMapping("/contribution")
-    public ResponseEntity<Map<String, String>> fileUpload(@RequestParam("file")MultipartFile file){
+    public ResponseEntity<Map<String, String>> fileUpload(@RequestParam String repoName,
+                                                          @RequestParam String description,
+                                                          @RequestParam("file")MultipartFile file){
         try{
+
             String ogFileName = file.getOriginalFilename();
             String uniquePath = UUID.randomUUID() + "-" + ogFileName;
 
-            uploadService.upload(file, uniquePath);
+            String storagePath = uploadService.upload(file, uniquePath);
+
+            CreateRepoRequestDTO dto = new CreateRepoRequestDTO(repoName, description, storagePath);
+
+            artworkVersionsService.commitUpload(dto);
 
             Map<String, String> res = new HashMap<>();
             res.put("filename", ogFileName);
