@@ -4,26 +4,36 @@ import java.time.LocalDate;
 
 public class ContributionSummary {
     private LocalDate date;
-    private long count;
+    private Long count;
 
-    public ContributionSummary(LocalDate localDate, long count){
-        this.date = localDate;
+    public ContributionSummary(LocalDate date, Long count) {
+        this.date = date;
         this.count = count;
     }
 
+    // Getters
     public LocalDate getDate() {
         return date;
     }
 
+    public Long getCount() {
+        return count;
+    }
+
+    // Setters (optional for DTOs but often included)
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public long getCount() {
-        return count;
+    public void setCount(Long count) {
+        this.count = count;
     }
 
-    public void setCount(long count) {
-        this.count = count;
+    @Override
+    public String toString() {
+        return "ContributionSummary{" +
+                "date=" + date +
+                ", count=" + count +
+                '}';
     }
 }

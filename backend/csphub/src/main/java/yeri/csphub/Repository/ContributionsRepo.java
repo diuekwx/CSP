@@ -12,12 +12,14 @@ import java.util.UUID;
 
 @Repository
 public interface ContributionsRepo extends JpaRepository<Contributions, Long> {
-    List<Contributions> findAllByUsername(String username);
-    @Query("""
-    SELECT new yeri.csphub.DTO.ContributionSummary(DATE(c.timestamp), COUNT(c))
-    FROM Contribution c
-    WHERE c.user.id = :username
-    GROUP BY DATE(c.timestamp)
-    ORDER BY DATE(c.timestamp)""")
-    List<ContributionSummary> getUserContributionsPerDay(@Param("username") String username);
+//    @Query("""
+//    SELECT new yeri.csphub.DTO.ContributionSummary(
+//        FUNCTION('DATE', c.timestamp), COUNT(c)
+//    )
+//    FROM Contributions c
+//    WHERE c.userId.id = :userId
+//    GROUP BY FUNCTION('DATE', c.timestamp)
+//    ORDER BY FUNCTION('DATE', c.timestamp)
+//""")
+//    List<ContributionSummary> getUserContributionsPerDay(@Param("userId") UUID userId);
 }

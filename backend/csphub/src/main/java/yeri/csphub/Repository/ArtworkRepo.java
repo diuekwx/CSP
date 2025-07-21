@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ArtworkRepo extends JpaRepository<Artworks, Long> {
-    List<Artworks> findAllByUser(Users user);
+    List<Artworks> findAllByUserId(Users user);
     Optional<Artworks> findByTitle(String title);
-    Optional<Artworks> findByUserAndName(String repoName, Users user);
+    Optional<Artworks> findByUserIdAndTitle(Users user, String repoName);
 }

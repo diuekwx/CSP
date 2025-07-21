@@ -29,6 +29,9 @@ public class Contributions {
 
     private Timestamp timestamp;
 
+    public Contributions() {
+    }
+
     public UUID getId() {
         return id;
     }
