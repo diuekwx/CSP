@@ -9,11 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import yeri.csphub.DTO.CreateRepoRequestDTO;
-import yeri.csphub.DTO.FileDto;
-import yeri.csphub.Entities.Contributions;
-import yeri.csphub.Service.ArtworkService;
+import yeri.csphub.DTO.ContributionDTO;
 import yeri.csphub.Service.ArtworkVersionsService;
 import yeri.csphub.Service.ContributionService;
 import yeri.csphub.Service.UploadService;
@@ -21,7 +17,6 @@ import yeri.csphub.Service.UploadService;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -72,7 +67,7 @@ public class ContributionController {
 
             String storagePath = uploadService.upload(file, uniquePath);
 
-            CreateRepoRequestDTO dto = new CreateRepoRequestDTO(repoName, description, storagePath);
+            ContributionDTO dto = new ContributionDTO(repoName, description, storagePath);
 
             artworkVersionsService.commitUpload(dto);
 

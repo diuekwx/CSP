@@ -1,16 +1,10 @@
 package yeri.csphub.DTO;
 
-public class CreateRepoRequestDTO {
 
+public class CreateRepoDTO {
     private String title;
     private String description;
-    private String fileUri;
-
-    public CreateRepoRequestDTO(String fileUri, String description, String title) {
-        this.fileUri = fileUri;
-        this.description = description;
-        this.title = title;
-    }
+    private boolean isPublic;
 
     public String getTitle() {
         return title;
@@ -28,11 +22,11 @@ public class CreateRepoRequestDTO {
         this.description = description;
     }
 
-    public String getFileUri() {
-        return fileUri;
+    public boolean isPublic() {
+        return isPublic;
     }
 
-    public void setFileUri(String fileUri) {
-        this.fileUri = fileUri;
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 }

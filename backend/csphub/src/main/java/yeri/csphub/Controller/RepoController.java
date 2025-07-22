@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import yeri.csphub.DTO.CreateRepoDTO;
 import yeri.csphub.DTO.EditingRepoRequestDTO;
 import yeri.csphub.Entities.Artworks;
 import yeri.csphub.Service.ArtworkService;
@@ -29,13 +30,15 @@ public class RepoController {
     //requestbody check -- have to change fs
     // make this shit a dto, cant have multiple requestbody lol
     @PostMapping("/create")
-    public ResponseEntity<?> createNewRepo(@RequestBody String title, @RequestBody String desc) throws DataIntegrityViolationException {
+    public ResponseEntity<?> createNewRepo(@RequestBody CreateRepoDTO repoDto) throws DataIntegrityViolationException {
+
         try {
-            Artworks created = artworkService.createNewRepo(title, desc);
+            Artworks created = artworkService.createNewRepo(repoDto.getTitle(), repoDto.getDescription());
             URI location = URI.create("/" + created.getUserId().getUsername() + "/" + created.getTitle());
             return ResponseEntity.created(location).body(created);
         }
-        catch (DataIntegrityViolationException e){
+        //DataIntegrityViolationException
+        catch (Exception e){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("A repository with this name already exists.");

@@ -32,6 +32,7 @@ public class Artworks {
     @Column(name = "created_at", columnDefinition = "timestamp")
     private Instant createdAt;
 
+    @Column(columnDefinition = "is_public")
     private boolean isPublic;
 
     public Artworks(Users userId, String title, String description, Instant createdAt, boolean isPublic) {
