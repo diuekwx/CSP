@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
     title: string;
@@ -7,11 +8,15 @@ interface FormData {
 }
 
 export default function CreateRepo() {
+    const token = localStorage.getItem("jwt");
     const [formData, setFormData] = useState<FormData>({
         title: '',
         description: '',
         isPublic: true
     });
+
+
+    const navigatae = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,20 +29,26 @@ export default function CreateRepo() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:5050/repository/create", {
+            console.log("sending")
+            console.log(token);
+            const response = await fetch('http://localhost:8080/repository/create', {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(formData)
             });
 
             if (!response.ok) {
+                console.log(response)
                 throw new Error("Failed to create repo");
+               
             }
 
             const data = await response.json();
             console.log("Repo created:", data);
+            navigatae('/home');
         } catch (error) {
             console.error("Error:", error);
         }

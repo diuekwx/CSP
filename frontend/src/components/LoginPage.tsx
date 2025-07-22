@@ -9,7 +9,7 @@ export default function LoginPage() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:5050/auth/auth/signin", {
+            const res = await fetch("http://localhost:8080/api/auth/signin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -23,6 +23,7 @@ export default function LoginPage() {
 
             const data = await res.json();
             console.log("login success: ", data);
+            localStorage.setItem("jwt", data.token)
             navigate('/home');
         } catch (error) {
             console.log("error during login");
@@ -67,9 +68,9 @@ export default function LoginPage() {
                         Sign in
                     </button>
                 </form>
-                {/* <p className="text-xs text-gray-500 text-center mt-6">
+                <p className="text-xs text-gray-500 text-center mt-6">
                     New to GitHub? <a href="#" className="text-blue-500 hover:underline">Create an account</a>
-                </p> */}
+                </p>
             </div>
         </div>
     );
