@@ -1,10 +1,13 @@
 package yeri.csphub.Service;
 
 import org.springframework.stereotype.Service;
+import yeri.csphub.DTO.ArtworkDTO;
 import yeri.csphub.DTO.EditingRepoRequestDTO;
+import yeri.csphub.Entities.ArtworkVersions;
 import yeri.csphub.Entities.Artworks;
 import yeri.csphub.Entities.Users;
 import yeri.csphub.Repository.ArtworkRepo;
+import yeri.csphub.Repository.ArtworkVersionRepo;
 import yeri.csphub.utils.UserUtil;
 
 import java.time.Instant;
@@ -21,10 +24,12 @@ public class ArtworkService {
 
     private final ArtworkRepo artworksRepo;
     private final UserUtil userUtil;
+    private final ArtworkVersionRepo artworkVersionRepo;
 
-    public ArtworkService(ArtworkRepo artworkRepo, UserUtil userUtil){
+    public ArtworkService(ArtworkRepo artworkRepo, UserUtil userUtil, ArtworkVersionRepo artworkVersionRepo){
         this.artworksRepo = artworkRepo;
         this.userUtil = userUtil;
+        this.artworkVersionRepo = artworkVersionRepo;
     }
 
     // make this shit a dto
@@ -37,6 +42,22 @@ public class ArtworkService {
         return artworks;
     }
 
+    public ArtworkDTO viewArtwork(Users user, String username, String repoName){
+        ArtworkDTO dto = new ArtworkDTO();
+
+        Artworks art = artworksRepo.findByUserIdAndTitle(user, repoName).orElseThrow(() -> new RuntimeException("Repo not found"));
+        dto.setTitle(repoName);
+        dto.setDescription(art.getDescription());
+        dto.setOwner(username);
+        dto.setPublic(art.isPublic());
+        List<ArtworkVersions> versions = artworkVersionRepo.findAllByArtworkId(art);
+        if (versions.isEmpty()){
+            dto.setEmpty(true);
+        }
+        dto.setFiles(versions);
+
+        return dto;
+    }
 
 
     public Artworks editProject(String repoName, EditingRepoRequestDTO dto){
