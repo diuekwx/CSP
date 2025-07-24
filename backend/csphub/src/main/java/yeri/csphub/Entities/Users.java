@@ -35,6 +35,9 @@ public class Users {
     @NotNull
     private String provider;
 
+    public Users() {
+    }
+
     public Users(String username, String email, String password) {
         this.username = username;
         this.email = email;
