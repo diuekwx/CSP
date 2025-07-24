@@ -1,8 +1,11 @@
 package yeri.csphub.Service;
 
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import yeri.csphub.DTO.ArtworkDTO;
+import yeri.csphub.DTO.ArtworkVersionDTO;
 import yeri.csphub.DTO.EditingRepoRequestDTO;
+import yeri.csphub.DTO.ProjectsDto;
 import yeri.csphub.Entities.ArtworkVersions;
 import yeri.csphub.Entities.Artworks;
 import yeri.csphub.Entities.Users;
@@ -11,6 +14,7 @@ import yeri.csphub.Repository.ArtworkVersionRepo;
 import yeri.csphub.utils.UserUtil;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,10 +55,13 @@ public class ArtworkService {
         dto.setOwner(username);
         dto.setPublic(art.isPublic());
         List<ArtworkVersions> versions = artworkVersionRepo.findAllByArtworkId(art);
-        if (versions.isEmpty()){
-            dto.setEmpty(true);
-        }
-        dto.setFiles(versions);
+        dto.setEmpty(versions.isEmpty());
+
+        List<ArtworkVersionDTO> versionDTOs = versions.stream()
+                .map(ArtworkVersionDTO::new)
+                .toList();
+
+        dto.setFiles(versionDTOs);
 
         return dto;
     }
@@ -82,10 +89,18 @@ public class ArtworkService {
         return toBeEdited;
     }
 
-    public List<Artworks> getAllprojects(){
-        Users user = userUtil.findUser();
+    public List<ProjectsDto> getAllprojects(Users user){
         List<Artworks> artworks = artworksRepo.findAllByUserId(user);
-        return artworks;
+        List<ProjectsDto> listOfDto = new ArrayList<>();
+        for (Artworks a: artworks){
+            ProjectsDto dto = new ProjectsDto();
+            dto.setId(a.getId());
+            dto.setTitle(a.getTitle());
+            dto.setPublic(a.isPublic());
+            dto.setUpdatedAt(a.getCreatedAt());
+            listOfDto.add(dto);
+        }
+        return listOfDto;
     }
 
 

@@ -6,7 +6,7 @@ import java.util.List;
 public class ArtworkDTO {
     private String title;
     private String description;
-    private List<ArtworkVersions> files;
+    private List<ArtworkVersionDTO> files;
     private boolean isEmpty;
     private boolean isPublic;
     private String owner;
@@ -27,11 +27,11 @@ public class ArtworkDTO {
         this.description = description;
     }
 
-    public List<ArtworkVersions> getFiles() {
+    public List<ArtworkVersionDTO> getFiles() {
         return files;
     }
 
-    public void setFiles(List<ArtworkVersions> files) {
+    public void setFiles(List<ArtworkVersionDTO> files) {
         this.files = files;
     }
 

@@ -20,12 +20,8 @@ public class Artworks {
     @Column(columnDefinition = "TEXT")
     private String title;
 
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "project_id", nullable = false)
-//    private ArtworkRepository project;
 
-    // TODO:EDIT SUPABASE
+    // TODO: make a updated at col
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -34,6 +30,9 @@ public class Artworks {
 
     @Column(columnDefinition = "is_public")
     private boolean isPublic;
+
+    public Artworks() {
+    }
 
     public Artworks(Users userId, String title, String description, Instant createdAt, boolean isPublic) {
         this.userId = userId;
