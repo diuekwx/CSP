@@ -1,7 +1,7 @@
 package yeri.csphub.Service;
 
 import org.springframework.stereotype.Service;
-import yeri.csphub.DTO.CreateRepoRequestDTO;
+import yeri.csphub.DTO.ContributionDTO;
 import yeri.csphub.Entities.ArtworkVersions;
 import yeri.csphub.Entities.Artworks;
 import yeri.csphub.Entities.Users;
@@ -24,7 +24,8 @@ public class ArtworkVersionsService {
         this.artworkRepo = artworkRepo;
     }
 
-    public void commitUpload(CreateRepoRequestDTO dto){
+    public void commitUpload(ContributionDTO dto){
+
         ArtworkVersions commit = new ArtworkVersions();
         commit.setVersion_description(dto.getDescription());
         commit.setUploadedAt(Instant.now());
@@ -34,10 +35,9 @@ public class ArtworkVersionsService {
         Artworks repo = artworkRepo.findByTitle(dto.getTitle())
                 .orElseThrow(() -> new RuntimeException("Commit error!"));
 
-        if (repo.getUserId() == user){
+        if (repo.getUserId().getId().equals(user.getId())){
             commit.setArtworkId(repo);
         }
-
         artworkVersionRepo.save(commit);
 
     }

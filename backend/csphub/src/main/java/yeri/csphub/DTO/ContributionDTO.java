@@ -6,7 +6,7 @@ public class ContributionDTO {
     private String description;
     private String fileUri;
 
-    public ContributionDTO(String fileUri, String description, String title) {
+    public ContributionDTO(String title, String description, String fileUri) {
         this.fileUri = fileUri;
         this.description = description;
         this.title = title;
