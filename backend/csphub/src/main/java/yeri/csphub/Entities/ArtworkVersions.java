@@ -17,7 +17,7 @@ public class ArtworkVersions {
     private String fileUrl;
 
     @ManyToOne
-    @JoinColumn(name = "artworks_id")
+    @JoinColumn(name = "artwork_id")
     private Artworks artworkId;
 
     @Column(columnDefinition = "TEXT", name = "version_description")
