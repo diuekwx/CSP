@@ -1,12 +1,15 @@
 package yeri.csphub.Service;
 
 import org.springframework.stereotype.Service;
+import yeri.csphub.DTO.AddContributionDTO;
 import yeri.csphub.DTO.ContributionSummary;
 import yeri.csphub.Entities.Contributions;
 import yeri.csphub.Entities.Users;
 import yeri.csphub.Repository.ContributionsRepo;
 import yeri.csphub.utils.UserUtil;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -24,16 +27,28 @@ public class ContributionService {
         this.userUtil = userUtil;
     }
 
-    public Map<LocalDate, Long> getContributionDates(String username){
-        Map<LocalDate, Long> res = new HashMap<>();
+    public Map<Date, Long> getContributionDates(String username){
+        Map<Date, Long> res = new HashMap<>();
         Users users = userUtil.findUser();
         UUID id = users.getId();
-//        List<ContributionSummary> summary = contributionsRepo.getUserContributionsPerDay(id);
-//        for (ContributionSummary c: summary){
-//            res.put(c.getDate(), c.getCount());
-//        }
-        return res;
+        List<ContributionSummary> summary = contributionsRepo.getUserContributionsPerDay(id);
+        List<Contributions> l = contributionsRepo.findAllByUserId(users);
 
+        for (ContributionSummary c: summary){
+            res.put(c.getDate(), c.getCount());
+        }
+        return res;
+    }
+
+    public void addContribution(AddContributionDTO dto){
+        Contributions contributions = new Contributions();
+        contributions.setUserId(dto.getUser());
+        contributions.setArtworkId(dto.getArtwork());
+        contributions.setArtworkVersionId(dto.getVersions());
+        contributions.setType(dto.getType());
+        contributions.setTimestamp(Instant.now());
+
+        contributionsRepo.save(contributions);
     }
 
 }

@@ -24,10 +24,11 @@ public class ArtworkVersionsService {
         this.artworkRepo = artworkRepo;
     }
 
-    public void commitUpload(ContributionDTO dto){
+    public ArtworkVersions commitUpload(ContributionDTO dto){
 
         ArtworkVersions commit = new ArtworkVersions();
         commit.setVersion_description(dto.getDescription());
+        commit.setOgFileName(dto.getOgFileName());
         commit.setUploadedAt(Instant.now());
         commit.setFileUrl(dto.getFileUri());
 
@@ -40,6 +41,8 @@ public class ArtworkVersionsService {
         }
         artworkVersionRepo.save(commit);
 
+        return commit;
     }
+
 
 }

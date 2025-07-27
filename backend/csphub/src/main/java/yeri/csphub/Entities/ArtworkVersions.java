@@ -26,6 +26,10 @@ public class ArtworkVersions {
     @Column(name = "uploaded_at", columnDefinition = "timestamp")
     private Instant uploadedAt;
 
+    @Column(columnDefinition = "TEXT", name = "og_file_name")
+    private String ogFileName;
+
+
     public UUID getId() {
         return id;
     }
@@ -64,5 +68,13 @@ public class ArtworkVersions {
 
     public void setUploadedAt(Instant uploadedAt) {
         this.uploadedAt = uploadedAt;
+    }
+
+    public String getOgFileName() {
+        return ogFileName;
+    }
+
+    public void setOgFileName(String ogFileName) {
+        this.ogFileName = ogFileName;
     }
 }

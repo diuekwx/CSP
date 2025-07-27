@@ -3,13 +3,23 @@ package yeri.csphub.DTO;
 public class ContributionDTO {
 
     private String title;
+    private String ogFileName;
     private String description;
     private String fileUri;
 
-    public ContributionDTO(String title, String description, String fileUri) {
-        this.fileUri = fileUri;
+    public ContributionDTO(String title, String ogFileName, String description, String fileUri) {
+        this.ogFileName = ogFileName;
         this.description = description;
         this.title = title;
+        this.fileUri = fileUri;
+    }
+
+    public String getOgFileName() {
+        return ogFileName;
+    }
+
+    public void setOgFileName(String ogFileName) {
+        this.ogFileName = ogFileName;
     }
 
     public String getTitle() {

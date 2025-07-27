@@ -3,6 +3,7 @@ package yeri.csphub.Entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -27,7 +28,8 @@ public class Contributions {
     @Column(columnDefinition = "TEXT")
     private String type;
 
-    private Timestamp timestamp;
+    @Column(columnDefinition = "timestamp")
+    private Instant timestamp;
 
     public Contributions() {
     }
@@ -72,11 +74,11 @@ public class Contributions {
         this.type = type;
     }
 
-    public Timestamp getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 }
