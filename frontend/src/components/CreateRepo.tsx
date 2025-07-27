@@ -16,7 +16,7 @@ export default function CreateRepo() {
     });
 
 
-    const navigatae = useNavigate();
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,8 +29,7 @@ export default function CreateRepo() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
-            console.log("sending")
-            console.log(token);
+
             const response = await fetch('http://localhost:8080/repository/create', {
                 method: "POST",
                 headers: {
@@ -47,8 +46,9 @@ export default function CreateRepo() {
             }
 
             const data = await response.json();
-            console.log("Repo created:", data);
-            navigatae('/home');
+            const title = data.title;
+            const user = data.userId.username;
+            navigate(`/${user}/${title}`);
         } catch (error) {
             console.error("Error:", error);
         }

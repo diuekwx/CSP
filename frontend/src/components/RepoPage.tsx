@@ -1,5 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ContributionUploader from "./Uploader";
+import Navbar from "./NavBar";
 
 interface RepoData {
   name: string;
@@ -15,22 +17,45 @@ interface ArtworkVersion {
   fileUrl: string;
   versionDescription: string;
   uploadedAt: string;
+  ogFileName: string;
 }
 
 export default function RepoPage() {
   const { owner, repoName } = useParams();
   const [repo, setRepo] = useState<RepoData | null>(null);
+  const [version, setVersion] = useState<ArtworkVersion[] | null> ([]);
+  const [showUploader, setShowUploader] = useState(false);
+  const token = localStorage.getItem("jwt");
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    fetch(`http://localhost:8080/repository/${owner}/${repoName}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then(setRepo)
-      .catch((err) => console.error("Failed to fetch repo:", err));
+    const fetchRepo = async () => {
+      
+      if (!token) {
+        console.error("No JWT token found in localStorage");
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:8080/repository/${owner}/${repoName}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`Failed to fetch repo: ${res.status} ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        setRepo(data);
+        console.log(data.files[0].ogFileName);
+        setVersion(data.files);
+      } catch (err) {
+        console.error("Error fetching repo:", err);
+      }
+    };
+
+    fetchRepo();
   }, [owner, repoName]);
 
   if (!repo) {
@@ -38,6 +63,8 @@ export default function RepoPage() {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="max-w-6xl mx-auto p-6">
       
       <div className="flex items-center justify-between border-b pb-4">
@@ -50,9 +77,10 @@ export default function RepoPage() {
         </div>
         <span
           className={`px-2 py-1 text-xs font-semibold rounded ${
+            // fix this lol
             repo.visibility === "public"
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-200 text-gray-700"
+              ? "bg-green-700 text-green-700"
+              : "bg-gray-900 text-gray-700"
           }`}
         >
           {repo.visibility}
@@ -61,16 +89,33 @@ export default function RepoPage() {
 
       
       <div className="flex space-x-8 mt-6 border-b text-sm font-medium text-gray-600">
-        <button className="pb-2 border-b-2 border-blue-600 text-blue-600">Code</button>
-        <button className="pb-2 hover:text-gray-900">Issues</button>
-        <button className="pb-2 hover:text-gray-900">Pull Requests</button>
+        <button className="pb-2 border-b-2 border-blue-600 text-blue-600">Project Files</button>
         <button className="pb-2 hover:text-gray-900">Settings</button>
       </div>
 
-      
       <div className="mt-6 border rounded-md p-4 bg-gray-50 text-gray-600">
-        <p>📁 File explorer coming soon...</p>
+        
+        <button
+          onClick={() => setShowUploader((prev) => !prev)}
+          className="px-4 py-2 bg-blue-600 text-white rounded">
+        {showUploader ? "Cancel Upload" : "Upload Contribution"}
+        </button>
+
+        {showUploader && <ContributionUploader repoName={repoName} />}
+        {version && version.length > 0 && (
+          <div className="mt-4">
+            <h2 className="text-lg font-semibold text-gray-700 mb-2">Uploaded Files</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              {version.map((v) => (
+                <li key={v.id}>{v.ogFileName}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        
       </div>
+
     </div>
+    </>
   );
 }

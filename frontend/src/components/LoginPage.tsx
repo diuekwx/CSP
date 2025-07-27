@@ -69,7 +69,7 @@ export default function LoginPage() {
                     </button>
                 </form>
                 <p className="text-xs text-gray-500 text-center mt-6">
-                    New to GitHub? <a href="#" className="text-blue-500 hover:underline">Create an account</a>
+                    No Account ? <a href="#" className="text-blue-500 hover:underline">Create an account</a>
                 </p>
             </div>
         </div>
