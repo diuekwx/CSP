@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ArtworkVersionRepo extends JpaRepository<ArtworkVersions, Long> {
     List<ArtworkVersions> findAllByArtworkId(Artworks artworks);
+    boolean existsByArtworkIdAndOgFileName (Artworks artworks, String ogFileName);
+    ArtworkVersions findByArtworkIdAndOgFileName(Artworks artworks, String ogFileName);
 }

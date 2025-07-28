@@ -37,11 +37,11 @@ public class ArtworkService {
     }
 
     // make this shit a dto
-    public Artworks createNewRepo(String title, String description){
+    public Artworks createNewRepo(String title, String description, boolean isPublic){
         Instant now = Instant.now();
         Users user = userUtil.findUser();
 
-        Artworks artworks = new Artworks(user, title, description, now, true);
+        Artworks artworks = new Artworks(user, title, description, now, isPublic);
         artworksRepo.save(artworks);
         return artworks;
     }
