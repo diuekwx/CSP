@@ -2,9 +2,11 @@ import { useState } from "react";
 
 interface Props {
   repoName?: string;
+  onUploadSuccess: () => void;
+
 }
 
-export default function ContributionUploader({repoName}: Props) {
+export default function ContributionUploader({repoName, onUploadSuccess}: Props) {
   const [file, setFile] = useState<File | null>(null);
 
   const [description, setDescription] = useState("");
@@ -47,8 +49,11 @@ export default function ContributionUploader({repoName}: Props) {
       }
 
       const data = await res.json();
+      
       console.log("Upload successful:", data);
       setStatus("success");
+      onUploadSuccess();
+
     } catch (err: any) {
       console.error("Upload error:", err);
       setErrorMessage(err.message);

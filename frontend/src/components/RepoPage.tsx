@@ -8,7 +8,7 @@ interface RepoData {
   owner: string;
   description: string;
   isEmpty: boolean;
-  visibility: "public" | "private"; // lol
+  public: boolean; // lol
   files: []
 }
 
@@ -25,10 +25,12 @@ export default function RepoPage() {
   const [repo, setRepo] = useState<RepoData | null>(null);
   const [version, setVersion] = useState<ArtworkVersion[] | null> ([]);
   const [showUploader, setShowUploader] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+
+
   const token = localStorage.getItem("jwt");
 
-  useEffect(() => {
-    const fetchRepo = async () => {
+  const fetchRepo = async () => {
       
       if (!token) {
         console.error("No JWT token found in localStorage");
@@ -47,16 +49,48 @@ export default function RepoPage() {
         }
 
         const data = await res.json();
+        console.log(data);
         setRepo(data);
-        console.log(data.files[0].ogFileName);
         setVersion(data.files);
       } catch (err) {
         console.error("Error fetching repo:", err);
       }
     };
 
+  useEffect(() => {
     fetchRepo();
   }, [owner, repoName]);
+
+  const fetchImageUrl = async (repoName: string, fileName: string): Promise<string | null> => {
+  if (!token) {
+    console.error("JWT token not found");
+    return null;
+  }
+
+  try {
+    const res = await fetch(
+      `http://localhost:8080/contribution/view-image?repoName=${encodeURIComponent(repoName)}&fileName=${encodeURIComponent(fileName)}`
+,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      console.error(`Failed to fetch image: ${res.status}`);
+      return null;
+    }
+
+    const url = await res.text(); 
+    console.log(url);
+    return url;
+  } catch (err) {
+    console.error("Image fetch error:", err);
+    return null;
+  }
+};
 
   if (!repo) {
     return <div className="p-6 text-gray-600">Loading repository...</div>;
@@ -78,19 +112,19 @@ export default function RepoPage() {
         <span
           className={`px-2 py-1 text-xs font-semibold rounded ${
             // fix this lol
-            repo.visibility === "public"
+            repo.public === true
               ? "bg-green-700 text-green-700"
               : "bg-gray-900 text-gray-700"
           }`}
         >
-          {repo.visibility}
+          {repo.public}
         </span>
       </div>
 
       
       <div className="flex space-x-8 mt-6 border-b text-sm font-medium text-gray-600">
         <button className="pb-2 border-b-2 border-blue-600 text-blue-600">Project Files</button>
-        <button className="pb-2 hover:text-gray-900">Settings</button>
+        {/* <button className="pb-2 hover:text-gray-900">Settings</button> */}
       </div>
 
       <div className="mt-6 border rounded-md p-4 bg-gray-50 text-gray-600">
@@ -101,15 +135,36 @@ export default function RepoPage() {
         {showUploader ? "Cancel Upload" : "Upload Contribution"}
         </button>
 
-        {showUploader && <ContributionUploader repoName={repoName} />}
+        {showUploader && <ContributionUploader repoName={repoName} onUploadSuccess={fetchRepo} />}
         {version && version.length > 0 && (
           <div className="mt-4">
             <h2 className="text-lg font-semibold text-gray-700 mb-2">Uploaded Files</h2>
-            <ul className="list-disc pl-5 space-y-1">
-              {version.map((v) => (
-                <li key={v.id}>{v.ogFileName}</li>
-              ))}
-            </ul>
+
+      <ul className="list-disc pl-5 space-y-1">
+        {version.map((v) => (
+          <li
+            key={v.id}
+            className="cursor-pointer text-blue-600 hover:underline"
+            onClick={async () => {
+              const url = await fetchImageUrl(repoName || "", v.ogFileName);
+              if (url) {
+                setSelectedImageUrl(url);
+              }
+            }}
+          >
+            {v.ogFileName}
+          </li>
+        ))}
+      </ul>
+      {selectedImageUrl && (
+        <div className="mt-6">
+          <img
+            src={selectedImageUrl}
+            alt="Preview"
+            className="max-w-full h-auto rounded border"
+          />
+        </div>
+      )}
           </div>
         )}
         
