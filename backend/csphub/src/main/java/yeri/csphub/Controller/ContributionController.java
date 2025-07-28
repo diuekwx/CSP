@@ -12,9 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 import yeri.csphub.DTO.AddContributionDTO;
 import yeri.csphub.DTO.ContributionDTO;
 import yeri.csphub.Entities.ArtworkVersions;
+import yeri.csphub.Entities.Users;
 import yeri.csphub.Service.ArtworkVersionsService;
 import yeri.csphub.Service.ContributionService;
 import yeri.csphub.Service.UploadService;
+import yeri.csphub.utils.FileUtils;
 import yeri.csphub.utils.UserUtil;
 
 import java.io.IOException;
@@ -33,13 +35,26 @@ public class ContributionController {
     private final ContributionService contributionService;
     private final ArtworkVersionsService artworkVersionsService;
     private final UserUtil userUtil;
+    private final FileUtils fileUtils;
 
     public ContributionController(UploadService uploadService, ContributionService contributionService,
-                                  ArtworkVersionsService artworkVersionsService, UserUtil userUtil){
+                                  ArtworkVersionsService artworkVersionsService, UserUtil userUtil, FileUtils fileUtils){
         this.uploadService = uploadService;
         this.contributionService = contributionService;
         this.artworkVersionsService = artworkVersionsService;
         this.userUtil = userUtil;
+        this.fileUtils = fileUtils;
+    }
+
+    @GetMapping("/view-image")
+    public ResponseEntity<String> viewImage(@RequestParam String repoName, @RequestParam String fileName){
+        try{
+            String file = artworkVersionsService.viewImage(repoName, fileName);
+            return ResponseEntity.status(200).body(file);
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CANT GET IMAGE LOL");
+        }
     }
 
     @GetMapping("/user-contributions")
@@ -67,15 +82,16 @@ public class ContributionController {
                                                           @RequestParam String description,
                                                           @RequestParam("file")MultipartFile file){
         try{
-            String ogFileName = file.getOriginalFilename();
-            String uniquePath = UUID.randomUUID() + "-" + ogFileName;
+            Users user = userUtil.findUser();
+            //file.getOriginalFilename();
+            String ogFileName = fileUtils.generateUniqueFileName(user, repoName, file.getOriginalFilename());
 
+            String uniquePath = UUID.randomUUID() + "-" + ogFileName;
             String storagePath = uploadService.upload(file, uniquePath);
 
-            ContributionDTO dto = new ContributionDTO(repoName, ogFileName, description, storagePath);
+            ContributionDTO dto = new ContributionDTO(repoName, ogFileName, description, uniquePath);
 
             ArtworkVersions artworkVersion = artworkVersionsService.commitUpload(dto);
-
             AddContributionDTO addDto = new AddContributionDTO(userUtil.findUser(), artworkVersion.getArtworkId(), artworkVersion, "upload");
 
             contributionService.addContribution(addDto);
