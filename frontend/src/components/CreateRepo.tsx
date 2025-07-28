@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
+import Navbar from "./NavBar";
 
 interface FormData {
     title: string;
@@ -29,7 +30,6 @@ export default function CreateRepo() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
-
             const response = await fetch('http://localhost:8080/repository/create', {
                 method: "POST",
                 headers: {
@@ -40,7 +40,6 @@ export default function CreateRepo() {
             });
 
             if (!response.ok) {
-                console.log(response)
                 throw new Error("Failed to create repo");
                
             }
@@ -55,6 +54,8 @@ export default function CreateRepo() {
     };
 
     return (
+        <>
+        <Navbar/>
         <div className="max-w-xl mx-auto mt-10 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -108,5 +109,6 @@ export default function CreateRepo() {
                 </button>
             </form>
         </div>
+        </>
     );
 }

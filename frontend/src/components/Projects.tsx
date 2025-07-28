@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCurrentUser } from "../api/auth";
+import Navbar from "./NavBar";
 
 
 interface Project {
   id: number;
   title: string;
-  isPublic: boolean;
+  public: boolean;
   updatedAt: Date;
 }
 
@@ -14,7 +15,6 @@ interface Project {
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [user, setUser] = useState<{ id: string; username: string } | null>(null);
-
 
     const token = localStorage.getItem("jwt");
 
@@ -60,7 +60,11 @@ export default function Projects() {
     }
 
     return (
+        <>
+       
+        <Navbar/>
         <div className="p-4">
+            
             <h1 className="text-2xl font-bold mb-4">Your Projects</h1>
             {projects.length === 0 ? (
                 <p>No projects found.</p>
@@ -74,13 +78,13 @@ export default function Projects() {
                     >
                     <h2 className="text-xl font-semibold">{project.title}</h2>
                     <p className="text-gray-600">
-                        {project.isPublic ? "Public" : "Private"}
+                        {project.public ? "Public" : "Private"}
                     </p>
                     </Link>
                 ))}
                 </div>
             )}
         </div>
-
+        </>
     );
 }
