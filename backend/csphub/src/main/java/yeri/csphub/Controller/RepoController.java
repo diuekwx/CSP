@@ -32,15 +32,11 @@ public class RepoController {
         this.userUtil = userUtil;
     }
 
-    //how do i get user id for every event they do ?
-    // connect user to every endpoint after login
-    // ie when saving a new project, how does the db know its connecting to a user
-
     @PostMapping("/create")
     public ResponseEntity<?> createNewRepo(@RequestBody CreateRepoDTO repoDto) throws DataIntegrityViolationException {
 
         try {
-            Artworks created = artworkService.createNewRepo(repoDto.getTitle(), repoDto.getDescription());
+            Artworks created = artworkService.createNewRepo(repoDto.getTitle(), repoDto.getDescription(), repoDto.isPublic());
             URI location = URI.create("/" + created.getUserId().getUsername() + "/" + created.getTitle());
             return ResponseEntity.created(location).body(created);
         }
