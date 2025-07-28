@@ -21,6 +21,7 @@ type HeatmapValue = {
 
 export default function HomePage() {
     const today = new Date();
+    const utcToday = new Date().toISOString().split("T")[0];
     const pad = (num: number) => String(num).padStart(2, '0');
     const navigate = useNavigate();
 
@@ -28,7 +29,7 @@ export default function HomePage() {
     const[year, setYears] = useState<number>(today.getFullYear());
     const [startDate, setStartDate] = useState<string>(`${today.getFullYear()}-01-01`);
     const [endDate, setEndDate] = useState<string>
-        (`${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`);
+        (`${utcToday}`);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -48,6 +49,7 @@ export default function HomePage() {
             }
 
             const data: RawContribution[] = await response.json();
+        
 
             const formattedData: HeatmapValue[] = Object.entries(data).map(
             ([date, count]) => ({
@@ -73,8 +75,6 @@ export default function HomePage() {
     const handleCreateRepo = () => {
         navigate('/new')
     }
-
-    console.log(dates);
 
     return (
         <>
