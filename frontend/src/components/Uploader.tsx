@@ -49,7 +49,7 @@ export default function ContributionUploader({repoName, onUploadSuccess}: Props)
         throw new Error(error.error || "Upload failed");
       }
 
-      const data = await res.json();
+      // const data = await res.json();
       
       setStatus("success");
       onUploadSuccess();
