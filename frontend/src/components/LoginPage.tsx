@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../api/url';
 
 export default function LoginPage() {
     const [username, setUsername] = useState<string>('');
@@ -9,7 +10,7 @@ export default function LoginPage() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:8080/api/auth/signin", {
+            const res = await fetch(`${API_BASE_URL}/api/auth/signin`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

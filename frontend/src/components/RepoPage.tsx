@@ -2,13 +2,14 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ContributionUploader from "./Uploader";
 import Navbar from "./NavBar";
+import { API_BASE_URL } from "../api/url";
 
 interface RepoData {
   name: string;
   owner: string;
   description: string;
   isEmpty: boolean;
-  public: boolean; // lol
+  public: boolean;
   files: []
 }
 
@@ -38,7 +39,7 @@ export default function RepoPage() {
       }
 
       try {
-        const res = await fetch(`http://localhost:8080/repository/${owner}/${repoName}`, {
+        const res = await fetch(`${API_BASE_URL}/repository/${owner}/${repoName}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -49,7 +50,6 @@ export default function RepoPage() {
         }
 
         const data = await res.json();
-        console.log(data);
         setRepo(data);
         setVersion(data.files);
       } catch (err) {
@@ -69,7 +69,7 @@ export default function RepoPage() {
 
   try {
     const res = await fetch(
-      `http://localhost:8080/contribution/view-image?repoName=${encodeURIComponent(repoName)}&fileName=${encodeURIComponent(fileName)}`
+      `${API_BASE_URL}/contribution/view-image?repoName=${encodeURIComponent(repoName)}&fileName=${encodeURIComponent(fileName)}`
 ,
       {
         headers: {
@@ -84,7 +84,6 @@ export default function RepoPage() {
     }
 
     const url = await res.text(); 
-    console.log(url);
     return url;
   } catch (err) {
     console.error("Image fetch error:", err);
@@ -111,7 +110,6 @@ export default function RepoPage() {
         </div>
         <span
           className={`px-2 py-1 text-xs font-semibold rounded ${
-            // fix this lol
             repo.public === true
               ? "bg-green-700 text-green-700"
               : "bg-gray-900 text-gray-700"

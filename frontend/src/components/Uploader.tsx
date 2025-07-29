@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_BASE_URL } from "../api/url";
 
 interface Props {
   repoName?: string;
@@ -35,7 +36,7 @@ export default function ContributionUploader({repoName, onUploadSuccess}: Props)
     formData.append("description", description);
 
     try {
-      const res = await fetch("http://localhost:8080/contribution/contribution", {
+      const res = await fetch(`${API_BASE_URL}/contribution/contribution`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt") || ""}`,
@@ -50,12 +51,10 @@ export default function ContributionUploader({repoName, onUploadSuccess}: Props)
 
       const data = await res.json();
       
-      console.log("Upload successful:", data);
       setStatus("success");
       onUploadSuccess();
 
     } catch (err: any) {
-      console.error("Upload error:", err);
       setErrorMessage(err.message);
       setStatus("error");
     }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCurrentUser } from "../api/auth";
 import Navbar from "./NavBar";
+import { API_BASE_URL } from "../api/url";
 
 
 interface Project {
@@ -32,7 +33,7 @@ export default function Projects() {
 
         const fetchData = async () => {
         try {
-            const response = await fetch("http://localhost:8080/repository/projects", {
+            const response = await fetch(`${API_BASE_URL}/repository/projects`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

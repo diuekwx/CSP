@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import Navbar from "./NavBar";
+import { API_BASE_URL } from "../api/url";
 
 interface FormData {
     title: string;
@@ -30,7 +31,7 @@ export default function CreateRepo() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/repository/create', {
+            const response = await fetch(`${API_BASE_URL}/repository/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

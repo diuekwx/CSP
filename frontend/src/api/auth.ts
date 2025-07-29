@@ -1,5 +1,7 @@
+import { API_BASE_URL } from "./url";
+
 export async function getCurrentUser() {
-  const res = await fetch("http://localhost:8080/api/auth/me", {
+  const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },

@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./url";
+
 async function uploadContribution({
   file,
   repoName,
@@ -12,7 +14,7 @@ async function uploadContribution({
   formData.append("repoName", repoName);
   formData.append("description", description);
 
-  const res = await fetch("http://localhost:8080/contribution/contribution", {
+  const res = await fetch(`${API_BASE_URL}/contribution/contribution`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwt") || ""}`,

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/HeatMap.css';
 import Navbar from './NavBar';
+import { API_BASE_URL } from '../api/url';
 
 interface Dates{
     date: string,
@@ -36,7 +37,7 @@ export default function HomePage() {
             try {
             const token = localStorage.getItem("jwt");
 
-            const response = await fetch("http://localhost:8080/contribution/user-contributions", {
+            const response = await fetch(`${API_BASE_URL}/contribution/user-contributions`, {
                 method: "GET",
                 headers: {
                 "Content-Type": "application/json",
