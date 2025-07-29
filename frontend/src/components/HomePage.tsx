@@ -23,14 +23,16 @@ type HeatmapValue = {
 export default function HomePage() {
     const today = new Date();
     const utcToday = new Date().toISOString().split("T")[0];
-    const pad = (num: number) => String(num).padStart(2, '0');
     const navigate = useNavigate();
 
     const [dates, setDates] = useState<Dates[]>([]);
-    const[year, setYears] = useState<number>(today.getFullYear());
-    const [startDate, setStartDate] = useState<string>(`${today.getFullYear()}-01-01`);
-    const [endDate, setEndDate] = useState<string>
-        (`${utcToday}`);
+    // const[year, setYears] = useState<number>(today.getFullYear());
+    const year = today.getFullYear()
+    const startDate = `${today.getFullYear()}-01-01`;
+    const endDate = `${utcToday}`;
+    // const [startDate, setStartDate] = useState<string>(`${today.getFullYear()}-01-01`);
+    // const [endDate, setEndDate] = useState<string>
+    //     (`${utcToday}`);
 
     useEffect(() => {
         const fetchData = async () => {
