@@ -32,7 +32,7 @@ public class UploadService {
     @Value("${supabase.bucket}")
     private String bucket;
 
-    @Value("${supabase.service_role_key}")
+    @Value("${supabase.service-role-key}")
     private String serviceRoleKey;
 
     private final HttpClient client = HttpClient.newHttpClient();
