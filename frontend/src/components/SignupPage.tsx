@@ -85,7 +85,7 @@ export default function SignupPage() {
         </button>
 
         {error && <p className="text-red-600 text-sm text-center">{error}</p>}
-        {success && <p className="text-green-600 text-sm text-center">{success}</p>}
+        {success && <p className="text-green-600 text-sm text-center">{success} <a href="/login" className="text-blue-500 hover:underline">Login Here!</a> </p>}
       </form>
     </div>
   );
